@@ -5,6 +5,8 @@ import os
 import json
 import PyPDF2
 import openai
+import requests
+import io
 
 st.markdown("<h2 style='text-align: center; color: black;'>📐Gerador de Questões de Geometria Plana</h2>", unsafe_allow_html=True)
 st.write("---")
@@ -182,27 +184,47 @@ if st.session_state.selected_option == "Modelo 1 - Chat GPT":
     #client = OpenAI(api_key=api_key)
 
     # ========== CARREGAMENTO E CACHE DE CONTEÚDO ==========
-    @st.cache_data
-    def load_pdf_text(path: str) -> str:
-        text = ""
-        with open(path, "rb") as f:
-            reader = PyPDF2.PdfReader(f)
-            for page in reader.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text += page_text + "\n"
-        return text
-
+    # Função para carregar PDF do GitHub
+    def load_pdf_from_github(url: str) -> str:
+        """Carrega e extrai texto de um PDF do GitHub"""
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            
+            pdf_file = io.BytesIO(response.content)
+            pdf_reader = PyPDF2.PdfReader(pdf_file)
+            
+            text = ""
+            for page in pdf_reader.pages:
+                text += page.extract_text() + "\n"
+            
+            return text.strip()
+        except Exception as e:
+            st.error(f"Erro ao carregar PDF: {e}")
+            return ""
+    
     @st.cache_data
     def load_all_topics() -> Dict[str, str]:
-        base = r"C:\Users\degef.antunes\Desktop\JoseAmerico\Python_Projects\Geometria-Gigi"
+        """Carrega todos os tópicos dos PDFs do GitHub"""
+        base = "https://github.com/JAmerico1898/geometria/raw/1f64238760bea9594b7ac886266e8abf8e7a6836"
         files = {
-            "Ângulos e Relações Métricas": os.path.join(base, "1.Ângulos e Relações Métricas.pdf"),
-            "Congruência de Triângulos": os.path.join(base, "2.Congruência de Triângulos.pdf"),
-            "Propriedades Métricas dos Triângulos": os.path.join(base, "3.Propriedades Métricas dos Triângulos.pdf"),
-            "Quadriláteros e Polígonos Especiais": os.path.join(base, "4.Quadriláteros e Polígonos Especiais.pdf"),
+            "Ângulos e Relações Métricas": f"{base}/1.%C3%82ngulos%20e%20Rela%C3%A7%C3%B5es%20M%C3%A9tricas.pdf",
+            "Congruência de Triângulos": f"{base}/2.Congru%C3%AAncia%20de%20Tri%C3%A2ngulos.pdf",
+            "Propriedades Métricas dos Triângulos": f"{base}/3.Propriedades%20M%C3%A9tricas%20dos%20Tri%C3%A2ngulos.pdf",
+            "Quadriláteros e Polígonos Especiais": f"{base}/4.Quadril%C3%A1teros%20e%20Pol%C3%ADgonos%20Especiais.pdf",
         }
-        return {topic: load_pdf_text(path) for topic, path in files.items()}
+        
+        topics_content = {}
+        for topic, url in files.items():
+            with st.spinner(f"Carregando {topic}..."):
+                content = load_pdf_from_github(url)
+                if content:
+                    topics_content[topic] = content
+                else:
+                    # Fallback para conteúdo estático se falhar
+                    topics_content[topic] = DOCUMENTOS_CONTEXTO.get(topic, "Conteúdo não disponível")
+        
+        return topics_content
 
     # ========== FUNÇÃO DE GERAÇÃO DE QUESTÕES ==========
     def generate_questions(context: str, n: int, difficulty: str, topic: str, model: str) -> List[Dict]:
@@ -296,11 +318,6 @@ elif st.session_state.selected_option == "Modelo 2 - Claude":
     """, unsafe_allow_html=True)
 
 
-
-
-
-
-
     # Tentativa de importar bibliotecas de LLM
     try:
         import google.generativeai as genai
@@ -329,7 +346,7 @@ elif st.session_state.selected_option == "Modelo 2 - Claude":
                 gemini_api_key = st.secrets.get("GEMINI_API_KEY")
                 if gemini_api_key:
                     genai.configure(api_key=gemini_api_key)
-                    gemini_model = genai.GenerativeModel('gemini-1.5-pro')
+                    gemini_model = genai.GenerativeModel('gemini-2.5-pro')
                     llm_status["gemini"] = True
             except Exception as e:
                 st.warning(f"⚠️ Erro ao configurar Gemini: {e}")
@@ -357,6 +374,59 @@ elif st.session_state.selected_option == "Modelo 2 - Claude":
         return gemini_model, openai_client, llm_status
 
     gemini_model, openai_client, llm_status = configure_llms()
+
+
+    # ========== CARREGAMENTO E CACHE DE CONTEÚDO ==========
+    # Função para carregar PDF do GitHub
+    def load_pdf_from_github(url: str) -> str:
+        """Carrega e extrai texto de um PDF do GitHub"""
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            
+            pdf_file = io.BytesIO(response.content)
+            pdf_reader = PyPDF2.PdfReader(pdf_file)
+            
+            text = ""
+            for page in pdf_reader.pages:
+                text += page.extract_text() + "\n"
+            
+            return text.strip()
+        except Exception as e:
+            st.error(f"Erro ao carregar PDF: {e}")
+            return ""
+    
+    @st.cache_data
+    def load_all_topics() -> Dict[str, str]:
+        """Carrega todos os tópicos dos PDFs do GitHub"""
+        base = "https://github.com/JAmerico1898/geometria/raw/1f64238760bea9594b7ac886266e8abf8e7a6836"
+        files = {
+            "Ângulos e Relações Métricas": f"{base}/1.%C3%82ngulos%20e%20Rela%C3%A7%C3%B5es%20M%C3%A9tricas.pdf",
+            "Congruência de Triângulos": f"{base}/2.Congru%C3%AAncia%20de%20Tri%C3%A2ngulos.pdf",
+            "Propriedades Métricas dos Triângulos": f"{base}/3.Propriedades%20M%C3%A9tricas%20dos%20Tri%C3%A2ngulos.pdf",
+            "Quadriláteros e Polígonos Especiais": f"{base}/4.Quadril%C3%A1teros%20e%20Pol%C3%ADgonos%20Especiais.pdf",
+        }
+        
+        topics_content = {}
+        for topic, url in files.items():
+            with st.spinner(f"Carregando {topic}..."):
+                content = load_pdf_from_github(url)
+                if content:
+                    topics_content[topic] = content
+                else:
+                    # Fallback para conteúdo estático se falhar
+                    topics_content[topic] = DOCUMENTOS_CONTEXTO.get(topic, "Conteúdo não disponível")
+        
+        return topics_content
+
+    # Carregar conteúdo dos PDFs
+    try:
+        DOCUMENTOS_CONTEXTO = load_all_topics()
+        st.success("✅ PDFs carregados do GitHub com sucesso!")
+    except Exception as e:
+        st.warning(f"⚠️ Erro ao carregar PDFs: {e}. Usando conteúdo estático.")
+        # Fallback para conteúdo estático original
+
 
     # Conteúdo dos documentos (extraído dos PDFs fornecidos)
     DOCUMENTOS_CONTEXTO = {
@@ -563,7 +633,7 @@ elif st.session_state.selected_option == "Modelo 2 - Claude":
         
         # Status do Gemini
         if llm_status["gemini"]:
-            st.success("✅ **Google Gemini 1.5 Pro** - Disponível")
+            st.success("✅ **Google Gemini 2.5 Pro** - Disponível")
         else:
             st.error("❌ **Google Gemini** - Não configurado")
         
@@ -580,8 +650,8 @@ elif st.session_state.selected_option == "Modelo 2 - Claude":
         opcoes_llm = {}
         
         if llm_status["gemini"]:
-            llms_disponiveis.append("Google Gemini 1.5 Pro")
-            opcoes_llm["Google Gemini 1.5 Pro"] = "gemini"
+            llms_disponiveis.append("Google Gemini 2.5 Pro")
+            opcoes_llm["Google Gemini 2.5 Pro"] = "gemini"
         
         if llm_status["openai"]:
             llms_disponiveis.append("OpenAI GPT-4o-mini")
@@ -710,11 +780,6 @@ elif st.session_state.selected_option == "Modelo 2 - Claude":
                 st.success(questao["resposta_final"])
             
             st.markdown("---")
-
-
-
-
-
 
 
     # Footer
