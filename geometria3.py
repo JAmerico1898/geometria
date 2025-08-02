@@ -7,6 +7,7 @@ import PyPDF2
 import openai
 import requests
 import io
+import google.generativeai as genai 
 
 st.markdown("<h2 style='text-align: center; color: black;'>📐Gerador de Questões de Geometria Plana</h2>", unsafe_allow_html=True)
 st.write("---")
@@ -206,14 +207,15 @@ if st.session_state.selected_option == "Modelo 1 - Chat GPT":
     @st.cache_data
     def load_all_topics() -> Dict[str, str]:
         """Carrega todos os tópicos dos PDFs do GitHub"""
-        base = "https://github.com/JAmerico1898/geometria/raw/1f64238760bea9594b7ac886266e8abf8e7a6836"
+        base = "https://github.com/JAmerico1898/geometria/raw/999ddb566bc2d6682231419750c0914e4b983b91"
         files = {
             "Ângulos e Relações Métricas": f"{base}/1.%C3%82ngulos%20e%20Rela%C3%A7%C3%B5es%20M%C3%A9tricas.pdf",
             "Congruência de Triângulos": f"{base}/2.Congru%C3%AAncia%20de%20Tri%C3%A2ngulos.pdf",
             "Propriedades Métricas dos Triângulos": f"{base}/3.Propriedades%20M%C3%A9tricas%20dos%20Tri%C3%A2ngulos.pdf",
             "Quadriláteros e Polígonos Especiais": f"{base}/4.Quadril%C3%A1teros%20e%20Pol%C3%ADgonos%20Especiais.pdf",
         }
-        
+ 
+       
         topics_content = {}
         for topic, url in files.items():
             with st.spinner(f"Carregando {topic}..."):
