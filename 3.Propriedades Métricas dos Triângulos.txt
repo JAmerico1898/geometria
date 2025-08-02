@@ -1,0 +1,53 @@
+Contexto Estruturado – Propriedades Métricas dos Triângulos
+
+Use este material como base de conhecimento para gerar questões em três níveis (Fácil / Intermediário / Difícil) para estudantes do Ensino Médio.
+
+1. Objetivos gerais
+- Revisar semelhança de triângulos, o teorema fundamental da proporcionalidade (Tales), o Teorema de Pitágoras e apresentar os principais pontos notáveis: baricentro, ortocentro e incentro.
+
+2. Semelhança de Triângulos
+Item | Essência
+Definição: Dois Δ são semelhantes se seus ângulos correspondentes são congruentes e as razões dos lados correspondentes são iguais (razão k).
+Critérios: AA (dois ângulos), LAL (lado-ângulo-lado proporcional), LLL (três razões de lados).
+Teorema fundamental da proporcionalidade: Se EF ∥ BC em ΔABC, então AB/AE = AC/AF = BC/EF.
+Conversa paralela ↔ proporção: AB/AE = AC/AF implica EF ∥ BC e vice-versa.
+
+3. Relações Métricas Especiais
+Tema | Formulação
+Áreas com a mesma altura: Para paralelogramos ou triângulos de mesma altura, as áreas são proporcionais às bases.
+Teorema de Pitágoras: Em Δ retângulo, a² = b² + c².
+Recíproca de Pitágoras: Se para três lados vale a² = b² + c², então o triângulo é retângulo oposto ao lado a.
+
+4. Pontos Notáveis
+Ponto | Construção & Propriedades | Uso em Questões
+Baricentro (G): Interseção das medianas; distância aos vértices é 2/3 da mediana. | Divisão de segmentos, equilíbrio.
+Ortocentro (H): Concurrência das alturas; posição depende do tipo de triângulo. | Ângulos retos, problemas de posição.
+Incentro (I): Concurrência das bissetrizes internas; centro da circunferência inscrita. | Distâncias iguais aos lados, raios etc.
+
+5. Sugestões de Tipos de Questão
+Nível | Exemplos de foco
+Fácil: 
+  • Aplicar Pitágoras em triângulos simples.
+  • Identificar triângulos semelhantes e lados proporcionais.
+  • Determinar baricentro em triângulo equilátero.
+Intermediário: 
+  • Combinar semelhança + Pitágoras para comprimentos ocultos.
+  • Verificar paralelismo via proporção.
+  • Calcular raio da circunferência inscrita dado perímetro e área.
+Difícil: 
+  • Problemas envolvendo baricentro e ortocentro.
+  • Demonstrar concorrência de retas usando áreas.
+  • Provar reciprocidade (paralelismo ou triângulo retângulo).
+
+6. Convenções de Nomenclatura para Perguntas
+- Triângulo padrão: ΔABC; lados opostos a A, B, C: a, b, c.
+- Pontos em lados: E ∈ AB, F ∈ AC, etc.
+- Relações de semelhança: use razão k ou específica (ex.: AB/DE).
+- Unidades: mantenha consistência (cm, m).
+
+7. Estratégia de Geração de Questões
+- Selecionar conceito-alvo (ex.: AA, Pitágoras, incentro).
+- Definir estrutura geométrica (triângulo único, paralelas, medianas etc.).
+- Escolher dados numéricos coerentes com o nível de dificuldade.
+- Verificar unicidade da solução usando as relações citadas.
+- Incluir variações: cálculos, demonstrações, provas de posição ou paralelismo.
